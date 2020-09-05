@@ -1,0 +1,4 @@
+*.ipynb*
+*.tar.gz
+
+data/mcmc_chains
