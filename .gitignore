@@ -1,4 +1,4 @@
-*.ipynb*
+.ipynb_checkpoints
 *.tar.gz
 
 data/mcmc_chains

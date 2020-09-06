@@ -1,5 +1,6 @@
 figure.figsize: 10, 6
 legend.fontsize: 18
+legend.frameon: False
 lines.linewidth: 4
 patch.linewidth: 2.2
 hatch.linewidth: 2
