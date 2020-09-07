@@ -1,4 +1,5 @@
 .ipynb_checkpoints
+*.code-workspace
 *.tar.gz
 
 data/mcmc_chains
