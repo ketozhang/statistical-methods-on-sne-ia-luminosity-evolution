@@ -2,4 +2,5 @@
 *.code-workspace
 *.tar.gz
 
-data/mcmc_chains
+data/mcmc_chains/
+__pycache__/
