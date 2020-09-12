@@ -2,6 +2,7 @@ figure.figsize: 10, 6
 legend.fontsize: 16
 legend.frameon: False
 lines.linewidth: 4
+axes.axisbelow: False
 patch.linewidth: 2.2
 hatch.linewidth: 2
 xtick.direction: in
