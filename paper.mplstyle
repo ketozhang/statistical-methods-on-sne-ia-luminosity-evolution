@@ -9,5 +9,7 @@ xtick.direction: in
 ytick.direction: in
 xtick.minor.visible: True
 ytick.minor.visible: True
-# xtick.minor.size: 7
-# ytick.minor.size: 7
+xtick.major.size: 12 # major tick size in points
+xtick.minor.size: 8 # minor tick size in points
+ytick.major.size: 12 # major tick size in points
+ytick.minor.size: 8 # minor tick size in points

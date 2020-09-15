@@ -63,3 +63,30 @@ def load_hr(dataset):
     assert dataset_path.exists(), f"{dataset_path} does not exists."
     
     return ascii.read(dataset_path).to_pandas()
+
+def clean_data(age_df, hr_df):
+    age_df = age_df.set_index("snid").sort_index()
+
+    hr_df = load_hr("campbell")
+    hr_df = hr_df
+    hr_df.columns = hr_df.columns.str.lower()
+    hr_df = (hr_df.rename(columns={
+        "sdss": "snid",
+        "e_hr": "hr_err"
+    })
+             .set_index("snid")
+             .sort_index()[["hr", "hr_err"]])
+
+    in_age_not_hr = set(age_df.index) - set(hr_df.index)
+    in_hr_not_age = set(hr_df.index) - set(age_df.index)
+    print("Missing from R19 Table 1 of SNID:", in_age_not_hr)
+    print("Missing from Campbell MCMC chains of SNID:", in_hr_not_age)
+
+    print("Resulting data will be an inner join of the two remove all SNID mentioned above")
+    age_df = age_df.drop(index=in_age_not_hr)
+    hr_df = hr_df.drop(index=in_hr_not_age)
+    age_snids = age_df.index.unique().tolist()
+    hr_snids = age_df.index.unique().tolist()
+    
+    assert set(age_snids) == set(hr_snids)
+    return age_df, hr_df
