@@ -1,4 +1,4 @@
-Gmport sys
+import sys
 import numpy
 import pandas as pd
 from dataloader import *
@@ -52,5 +52,5 @@ if __name__ == "__main__":
     age_err = np.zeros(len(age))
     hr = df["hr"]
     hr_err = df["hr_err"]
-    results = run_linmix(age, age_err, hr, hr_err, linmix_kwargs=dict(K=1))
-    results.to_csv("results/linmix_3.csv", index=False)
+    #results = run_linmix(age, age_err, hr, hr_err, linmix_kwargs=dict(K=1))
+    #results.to_csv("results/linmix_3.csv", index=False)
