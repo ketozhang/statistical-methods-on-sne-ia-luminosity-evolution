@@ -152,9 +152,12 @@ if __name__ == "__main__":
     intercepts = []
     for i in tqdm(range(1000)):
         age = age_df.groupby("snid").sample(1)["age"]
+        age_err = np.zeros(len(age))
         hr = hr_df["hr"]
         hr_err = hr_df["hr_err"]
-        results = run_linmix(age, 0, hr, hr_err, linmix_kwargs=dict(K=1))
+        
+        results = run_linmix(age, age_err, hr, hr_err, linmix_kwargs=dict(K=2), run_kwargs=dict(maxiter=3000, miniter=1000))
+        
         slopes.append(results["slope"].mean())
         intercepts.append(results["intercept"].mean())
     pd.DataFrame({"slope": slopes, "intercept": intercepts}).to_csv(
