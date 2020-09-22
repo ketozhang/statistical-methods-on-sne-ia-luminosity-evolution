@@ -5,3 +5,4 @@
 data/mcmc_chains/
 __pycache__/
 .vscode/
+.venv/
