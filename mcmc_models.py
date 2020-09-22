@@ -45,7 +45,10 @@ def run_chi2_mcmc(x, y, yerr, nwalkers=25, nsteps=5000, sampler_kwargs={}):
     guess = np.array([intercept_guess, slope_guess, 1])
     ndim = len(guess)
 
-    pos = guess * 1e-4 + np.random.randn(nwalkers, ndim)
+    # Let the initial point sample from a Gaussian with standard deviation
+    # that's 1/2 of the guess value such that about 95% of the initial position
+    # starts within the range (-2*guess, 2*guess)
+    pos = guess + ((guess / 2) * np.random.randn(nwalkers, ndim))
     sampler = emcee.EnsembleSampler(
         nwalkers, ndim, log_posterior, args=(x, y, yerr), **sampler_kwargs
     )
@@ -129,7 +132,12 @@ if __name__ == "__main__":
 
         with Pool() as pool:
             sampler = run_chi2_mcmc(
-                age, hr, hr_err, nsteps=3000, nwalkers=10, sampler_kwargs=dict(pool=pool)
+                age,
+                hr,
+                hr_err,
+                nsteps=3000,
+                nwalkers=10,
+                sampler_kwargs=dict(pool=pool),
             )
 
         intercept, slope, _ = sampler.get_chain(flat=True, discard=1000).mean(axis=0)
