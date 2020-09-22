@@ -123,28 +123,41 @@ if __name__ == "__main__":
     hr_df = load_hr("campbell")
     age_df, hr_df = clean_data(age_df, hr_df)
 
+    # slopes = []
+    # intercepts = []
+    # for i in tqdm(range(1000), total=1000):
+    #     age = age_df.groupby("snid").sample(1)["age"]
+    #     hr = hr_df["hr"]
+    #     hr_err = hr_df["hr_err"]
+
+    #     with Pool() as pool:
+    #         sampler = run_chi2_mcmc(
+    #             age,
+    #             hr,
+    #             hr_err,
+    #             nsteps=3000,
+    #             nwalkers=10,
+    #             sampler_kwargs=dict(pool=pool),
+    #         )
+
+    #     intercept, slope, _ = sampler.get_chain(flat=True, discard=1000).mean(axis=0)
+    #     intercepts.append(intercept)
+    #     slopes.append(slope)
+
+    # pd.DataFrame({"slope": slopes, "intercept": intercepts}).to_csv(
+    #     "results/chi2-mcmc-sampler.csv"
+    # )
+
     slopes = []
     intercepts = []
-    for i in tqdm(range(1000), total=1000):
+    for i in tqdm(range(1000)):
         age = age_df.groupby("snid").sample(1)["age"]
         hr = hr_df["hr"]
         hr_err = hr_df["hr_err"]
-
-        with Pool() as pool:
-            sampler = run_chi2_mcmc(
-                age,
-                hr,
-                hr_err,
-                nsteps=3000,
-                nwalkers=10,
-                sampler_kwargs=dict(pool=pool),
-            )
-
-        intercept, slope, _ = sampler.get_chain(flat=True, discard=1000).mean(axis=0)
-        intercepts.append(intercept)
-        slopes.append(slope)
-
+        results = run_linmix(age, 0, hr, hr_err, linmix_kwargs=dict(K=1))
+        slopes.append(results["slope"].mean())
+        intercepts.append(results["intercept"].mean())
     pd.DataFrame({"slope": slopes, "intercept": intercepts}).to_csv(
-        "results/chi2-mcmc-sampler.csv"
+        "results/linmix-mcmc-sampler.csv"
     )
 
