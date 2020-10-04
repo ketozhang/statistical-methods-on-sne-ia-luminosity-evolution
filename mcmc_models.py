@@ -45,7 +45,7 @@ def log_lnl_with_x_posterior(theta, x, y, yerr, x_kdes):
         return stats.norm(loc=ypred, scale=var).pdf(y)
 
     lnl = 0
-    for i in tqdm(range(x.shape[0]), desc="One Step"):
+    for i in range(x.shape[0]):
         x_pdf = lambda _x: np.exp(x_kdes[i].score(np.array([_x]).reshape(1, -1)))
 
         integrand = lambda _x: y_given_x_pdf(_x, y[i], yerr[i]) * x_pdf(_x)
@@ -241,6 +241,8 @@ if __name__ == "__main__":
     #     "results/linmix-mcmc-sampler.csv"
     # )
 
+    print(VERBOSE)
+
     age_df = load_age_sample_from_mcmc_chains("campbell", mode="read")
     hr_df = load_hr("campbell")
     age_df, hr_df = clean_data(age_df, hr_df)
@@ -257,3 +259,4 @@ if __name__ == "__main__":
             sampler_kwargs=dict(pool=pool),
         )
 
+    np.savetxt("results/x_posterior_mcmc.csv", sampler.get_chain(flat=True), delimiter=",")
