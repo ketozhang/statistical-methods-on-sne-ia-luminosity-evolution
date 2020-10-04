@@ -241,8 +241,6 @@ if __name__ == "__main__":
     #     "results/linmix-mcmc-sampler.csv"
     # )
 
-    print(VERBOSE)
-
     age_df = load_age_sample_from_mcmc_chains("campbell", mode="read")
     hr_df = load_hr("campbell")
     age_df, hr_df = clean_data(age_df, hr_df)
@@ -254,8 +252,7 @@ if __name__ == "__main__":
             age_matrix,
             hr_df["hr"],
             hr_df["hr_err"],
-            nwalkers=10,
-            nsteps=100,
+            nsteps=20,
             sampler_kwargs=dict(pool=pool),
         )
 
