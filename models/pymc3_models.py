@@ -44,17 +44,17 @@ def run_model(y, yerr, x, k=3, sample_kwargs={}):
     mu_x, sigma_x, weights_x = get_gmm_params(x, k)
     
     with pm.Model() as model:
+        # Priors
         intercept = pm.Normal('intercept', mu=0, sigma=2) # [0, ~5]
         slope = pm.Uniform('slope', -0.1, 0)
-#         scatter = pm.Uniform('scatter', 0, 5)
-#         sigma = pm.Deterministic('sigma', pm.math.sqrt(yerr**2 + scatter))
+        scatter = pm.HalfNormal('scatter', 2)
 
         components = []
         for i in range(k):
             component = pm.Normal.dist(mu=mu_x[:,i], sigma=sigma_x[:,i], shape=nsamples)
             components.append(component)
-        
         x = pm.Mixture('x', w=weights_x, comp_dists=components, shape=nsamples)
+        sigma = pm.Deterministic('sigma', pm.math.sqrt(yerr**2 + scatter))
 
     #     likelihood_x = pm.Normal('x', mu=x.mean(axis=1), sigma=x.std(axis=1), shape=y.shape[0])
 
