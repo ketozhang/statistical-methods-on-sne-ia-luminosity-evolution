@@ -45,8 +45,8 @@ def run_model(y, yerr, x, k=3, sample_kwargs={}):
     
     with pm.Model() as model:
         # Priors
-        intercept = pm.Normal('intercept', mu=0, sigma=2) # [0, ~5]
-        slope = pm.Uniform('slope', -0.1, 0)
+        intercept = pm.Uniform('intercept', -1, 1)
+        slope = pm.Uniform('slope', -1, 0)
         scatter = pm.HalfNormal('scatter', 2)
 
         components = []

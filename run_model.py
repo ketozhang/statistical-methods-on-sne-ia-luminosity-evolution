@@ -17,7 +17,7 @@ if __name__ == "__main__":
     
     trace, model = run_model_pymc3(
         hr_df['hr'], hr_df['hr_err'], age_matrix,
-        sample_kwargs=dict(draws=25000, tune=10000, discard_tuned_samples=False, chains=4)
+        sample_kwargs=dict(draws=25000, tune=5000, discard_tuned_samples=True, chains=4)
     )
     
     for varname in tqdm(trace.varnames, desc="Saving results"):
