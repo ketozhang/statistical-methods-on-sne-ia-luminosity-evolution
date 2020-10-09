@@ -1,15 +1,41 @@
+# Fontsize
+# Let base font size be 16px (1em)
+
+# Figure
 figure.figsize: 10, 6
-legend.fontsize: 16
-legend.frameon: False
-lines.linewidth: 4
-axes.axisbelow: False
+
+# Axes
+axes.autolimit_mode: round_numbers
+
+# Lines
+lines.linewidth: 4 
 patch.linewidth: 2.2
 hatch.linewidth: 2
+
+# Markers
+lines.markersize: 5
+
+# Ticks
 xtick.direction: in
 ytick.direction: in
 xtick.minor.visible: True
 ytick.minor.visible: True
-xtick.major.size: 12 # major tick size in points
-xtick.minor.size: 8 # minor tick size in points
-ytick.major.size: 12 # major tick size in points
-ytick.minor.size: 8 # minor tick size in points
+xtick.minor.size: 8
+ytick.minor.size: 12
+xtick.major.size: 12
+ytick.major.size: 8
+
+# Legend
+legend.frameon: False
+legend.fontsize: 16
+
+# Colors
+# Credit: https://gist.github.com/huyng/816622
+# E24A33 : orange
+# 7A68A6 : purple
+# 348ABD : blue
+# 188487 : turquoise
+# A60628 : red
+# CF4457 : pink
+# 467821 : green
+axes.prop_cycle:  cycler('color', ['1f77b4', 'd62728', '2ca02c', 'ff7f0e', '348ABD', 'A60628', '467821', 'E24A33'])

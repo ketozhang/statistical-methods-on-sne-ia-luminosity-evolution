@@ -29,3 +29,5 @@ if __name__ == "__main__":
         result = np.array(result)   
         if result.ndim <= 2:
             np.savetxt(f"results/pymc3/{varname}.gz", np.array(result))
+        elif "_interval__" not in varname:
+            np.array(f"results/pymc3/{varname}.npz", np.array(result))
