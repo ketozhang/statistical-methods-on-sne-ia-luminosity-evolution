@@ -1,15 +1,1 @@
-figure.figsize: 10, 6
-legend.fontsize: 16
-legend.frameon: False
-lines.linewidth: 4
-axes.axisbelow: False
-patch.linewidth: 2.2
-hatch.linewidth: 2
-xtick.direction: in
-ytick.direction: in
-xtick.minor.visible: True
-ytick.minor.visible: True
-xtick.major.size: 12 # major tick size in points
-xtick.minor.size: 8 # minor tick size in points
-ytick.major.size: 12 # major tick size in points
-ytick.minor.size: 8 # minor tick size in points
+/home/keto/Projects/python_playground/plotting/style.mplstyle
