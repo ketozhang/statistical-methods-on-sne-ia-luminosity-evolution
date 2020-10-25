@@ -45,24 +45,12 @@ class GaussianMixture:
     def fit(self, x, n_components=3):
         self._k = n_components
 
-        if self.results_fpath.exists() and self.params_fpath.exists():
-            logging.warning(textwrap.dedent(
-                f"""{self.__class__.__name__} save found in files:
-                    {self.params_fpath}
-                    {self.results_fpath}
-
-                skipping fit...
-                """
-            ))
-            with open(self.results_fpath, "rb") as f:
-                self.gmms = pickle.load(f)
-        else:
-            self.gmms = []
-            for i in trange(x.shape[0], desc="GMM Fit"):
-                gmm = mixture.GaussianMixture(
-                    n_components=n_components, covariance_type="spherical"
-                ).fit(x[i].reshape(len(x[i]), -1))
-                self.gmms.append(gmm)
+        self.gmms = []
+        for i in trange(x.shape[0], desc="GMM Fit"):
+            gmm = mixture.GaussianMixture(
+                n_components=n_components, covariance_type="spherical"
+            ).fit(x[i].reshape(len(x[i]), -1))
+            self.gmms.append(gmm)
 
     def get_results(self):
         return self.gmms
