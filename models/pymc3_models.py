@@ -1,8 +1,6 @@
 import numpy as np
 import pymc3 as pm
 
-from .gaussian_mixture import GaussianMixture
-
 
 class LinearModel:
     def __init__(self, name):
@@ -19,7 +17,7 @@ class LinearModel:
 
         nsamples = y.shape[0]
 
-        k = len(gmm_params) // 3
+        k = gmm_params.shape[1] // 3
         mu_x = gmm_params[:, :k]
         sigma_x = gmm_params[:, k:2*k]
         weights_x = gmm_params[:, 2*k:3*k]
