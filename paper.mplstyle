@@ -1,1 +1,44 @@
-/home/keto/profile/python/plotting/style.mplstyle
+# Fontsize
+# Let base font size be 16px (1em)
+
+# Figure
+figure.figsize: 10, 6
+figure.titlesize: 24 # 1.5em
+
+# Axes
+axes.autolimit_mode: round_numbers
+axes.linewidth: 2
+axes.titlesize : 19.2 # 1.2em
+
+# Lines
+lines.linewidth: 4
+patch.linewidth: 2.2
+hatch.linewidth: 2
+
+# Markers
+lines.markersize: 5
+
+# Ticks
+xtick.direction: in
+ytick.direction: in
+xtick.minor.visible: True
+ytick.minor.visible: True
+xtick.major.size: 12
+xtick.minor.size: 8
+ytick.major.size: 12
+ytick.minor.size: 8
+
+# Legend
+legend.frameon: False
+legend.fontsize: 16
+
+# Colors
+# Credit: https://gist.github.com/huyng/816622
+# E24A33 : orange
+# 7A68A6 : purple
+# 348ABD : blue
+# 188487 : turquoise
+# A60628 : red
+# CF4457 : pink
+# 467821 : green
+axes.prop_cycle:  cycler('color', ['4c72b0', 'dd8452', '55a868', 'c44e52', '348ABD', 'A60628', '467821', 'E24A33'])
