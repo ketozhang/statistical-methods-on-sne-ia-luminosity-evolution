@@ -14,8 +14,7 @@ class GaussianMixture:
         self.param_fpath = Path(
             f"results/gmm_age_posterior_fit_params_{self.name}.csv")
         self.results_fpath = Path(
-            f"results/gmm_age_posterior_fit_results_{self.name}.pkl"
-        )
+            f"results/gmm_age_posterior_fit_results_{self.name}.pkl")
 
         self._k = None
 

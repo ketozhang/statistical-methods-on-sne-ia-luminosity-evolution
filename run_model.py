@@ -39,5 +39,5 @@ if __name__ == "__main__":
             result.append(trace.get_values(varname, chains=[i]))
 
         result = np.array(result)
-        if "_interval__" not in varname:
-            np.savez(f"results/pymc3/{varname}_{lm.name}.npz", result)
+        if "__" not in varname:
+            np.savez_compressed(f"results/pymc3/{varname}_{lm.name}.npz", result)

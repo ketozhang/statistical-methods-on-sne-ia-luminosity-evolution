@@ -7,7 +7,7 @@ figure.titlesize: 24 # 1.5em
 
 # Axes
 axes.autolimit_mode: round_numbers
-axes.linewidth: 2
+axes.linewidth: 3
 axes.titlesize : 19.2 # 1.2em
 
 # Lines

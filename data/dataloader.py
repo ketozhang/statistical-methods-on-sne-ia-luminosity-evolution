@@ -4,12 +4,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from astropy.io import ascii
-from scipy import stats
+from tqdm import tqdm
 
 RNG = np.random.RandomState(952020)
 DATAPATH = Path("./data")
 RESULTSPATH = Path("./results")
-FIGURESPATH = Path("./figures")
+FIGURESPATH = Path("./paper/figures")
 
 
 def load_age_sample_from_mcmc_chains(dataset, mode="read", **kwargs):
@@ -22,11 +22,13 @@ def load_age_sample_from_mcmc_chains(dataset, mode="read", **kwargs):
         WARNING: this may take a long time sampling from ~20GB of data.
         If read, the mcmc chain sample is read from cached output of the "write" mode.
     **kwargs : keyword arguments
-        Used when mode="write" and passed onto the function `create_age_sample_from_mcmc_chains`.
+        See _create_age_sample_from_mcmc_chains
     """
     dataset_path = DATAPATH / "mcmc_chains" / dataset
 
     if mode == "write":
+        assert dataset_path.exists(), \
+            f"{dataset} tarball not extracted or not found in {dataset_path}"
         return _create_age_sample_from_mcmc_chains(dataset, dataset_path, **kwargs)
     if mode == "read":
         return pd.read_table(DATAPATH / f"{dataset}_samples.tsv")
@@ -37,8 +39,9 @@ def _create_age_sample_from_mcmc_chains(
 ):
     dfs = []
     all_dataset_files = list(dataset_path.glob("*.tsv"))
-    for i, sn_chain_path in enumerate(all_dataset_files):
-        print(f"{i}/{len(all_dataset_files)}", end="\r")
+    for i, sn_chain_path in tqdm(
+        enumerate(all_dataset_files), total=len(all_dataset_files), desc="Downsampling"
+    ):
         # Get number of rows in file
         # Header takes up 2 rows
         nheaders = 2
@@ -64,11 +67,7 @@ def _create_age_sample_from_mcmc_chains(
     return
 
 
-def load_hr(dataset):
-    """
-    dataset : str {"campbell", "campbellG", "gupta"}
-        Dataset to load.
-    """
+def load_hr():
     dataset_path = DATAPATH / "campbell_local_r19t1.txt"
 
     return ascii.read(dataset_path).to_pandas()
@@ -77,8 +76,6 @@ def load_hr(dataset):
 def clean_data(age_df, hr_df):
     age_df = age_df.set_index("snid").sort_index()
 
-    hr_df = load_hr("campbell")
-    hr_df = hr_df
     hr_df.columns = hr_df.columns.str.lower()
     hr_df = (
         hr_df.rename(columns={"sdss": "snid", "e_hr": "hr_err"})
