@@ -9,7 +9,7 @@ class LinearModel:
         self.name = name
         self.gmm = None
 
-    def fit(self, y, yerr, x, k=3, sample_kwargs={}, gmm_kwargs={}):
+    def fit(self, y, yerr, x, gmm_params, sample_kwargs={}):
         x = np.asarray(x)
         y = np.asarray(y)
         yerr = np.asarray(yerr)
@@ -19,12 +19,10 @@ class LinearModel:
 
         nsamples = y.shape[0]
 
-        gmm = GaussianMixture(name=self.name)
-        gmm.fit(x, **gmm_kwargs)
-        params = gmm.get_params().to_numpy()
-        mu_x = params[:, :k]
-        sigma_x = params[:, k:2*k]
-        weights_x = params[:, 2*k:3*k]
+        k = len(gmm_params) // 3
+        mu_x = gmm_params[:, :k]
+        sigma_x = gmm_params[:, k:2*k]
+        weights_x = gmm_params[:, 2*k:3*k]
 
         with pm.Model() as model:
             # Priors

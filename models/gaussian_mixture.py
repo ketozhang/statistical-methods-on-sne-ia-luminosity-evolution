@@ -6,17 +6,20 @@ import numpy as np
 import pandas as pd
 from sklearn import mixture
 from tqdm import trange
+import textwrap
 
 
 class GaussianMixture:
     def __init__(self, name):
         self.name = name
-        self.param_fpath = Path(
+        self.params_fpath = Path(
             f"results/gmm_age_posterior_fit_params_{self.name}.csv")
         self.results_fpath = Path(
             f"results/gmm_age_posterior_fit_results_{self.name}.pkl")
 
+        # Post-fit attribute
         self._k = None
+        self.gmms = None
 
     def fit_age_posterior(self, age_df, **kwargs):
         # snids = age_df.index.unique()
@@ -36,56 +39,49 @@ class GaussianMixture:
         #     ).fit(x)
         #     results[snid] = gmm
 
-        # df.to_csv(self.param_fpath, index_label="snid")
+        # df.to_csv(self.params_fpath, index_label="snid")
         # return results
 
-    def fit(self, x, index=None, n_components=3, save=True):
+    def fit(self, x, n_components=3):
         self._k = n_components
 
-        if self.results_fpath.exists() and self.param_fpath.exists():
-            logging.warning(
+        if self.results_fpath.exists() and self.params_fpath.exists():
+            logging.warning(textwrap.dedent(
                 f"""{self.__class__.__name__} save found in files:
-                    {self.param_fpath}
+                    {self.params_fpath}
                     {self.results_fpath}
 
                 skipping fit...
                 """
-            )
-            return
+            ))
+            with open(self.results_fpath, "rb") as f:
+                self.gmms = pickle.load(f)
+        else:
+            self.gmms = []
+            for i in trange(x.shape[0], desc="GMM Fit"):
+                gmm = mixture.GaussianMixture(
+                    n_components=n_components, covariance_type="spherical"
+                ).fit(x[i].reshape(len(x[i]), -1))
+                self.gmms.append(gmm)
 
-        gmms = []
-        for i in trange(x.shape[0], desc="GMM Fit"):
-            gmm = mixture.GaussianMixture(
-                n_components=n_components, covariance_type="spherical"
-            ).fit(x[i].reshape(len(x[i]), -1))
-            gmms.append(gmm)
+    def get_results(self):
+        return self.gmms
 
-        mu_x = (np.array([gmm.means_ for gmm in gmms])
+    def get_params(self):
+        mu_x = (np.array([gmm.means_ for gmm in self.gmms])
                 .reshape(-1, self._k)
                 )
-        sigma_x = np.array([gmm.covariances_ for gmm in gmms])
-        weights_x = np.array([gmm.weights_ for gmm in gmms])
+        sigma_x = np.array([gmm.covariances_ for gmm in self.gmms])
+        weights_x = np.array([gmm.weights_ for gmm in self.gmms])
 
-        results = pd.DataFrame(
+        params = pd.DataFrame(
             np.hstack((mu_x, sigma_x, weights_x)),
             columns=[f"mean{i}" for i in range(1, self._k + 1)]
             + [f"sigma{i}" for i in range(1, self._k + 1)]
             + [f"weight{i}" for i in range(1, self._k + 1)]
         )
-
-        if save:
-            # Save the GMM results object
-            with self.results_fpath.open("wb") as f:
-                pickle.dump(gmms, f)
-
-            # Save the GMM params
-            results.to_csv(self.param_fpath)
-        else:
-            return results
-
-    def get_params(self):
-        return pd.read_csv(self.param_fpath, index_col=0)
-        # params = np.genfromtxt(self.param_fpath, delimiter=",")
+        return params
+        # params = np.genfromtxt(self.params_fpath, delimiter=",")
         # if format == "numpy":
         #     return params
         # elif format == "dataframe":
@@ -98,7 +94,3 @@ class GaussianMixture:
         #     params_df = pd.DataFrame(params, )
 
         #     return params_df
-
-    def get_results(self):
-        with self.results_fpath.open("rb") as f:
-            return pickle.load(f)
