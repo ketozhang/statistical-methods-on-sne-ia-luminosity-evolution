@@ -69,7 +69,6 @@ class GaussianMixture:
 
         results = pd.DataFrame(
             np.hstack((mu_x, sigma_x, weights_x)),
-            index=index,
             columns=[f"mean{i}" for i in range(1, self._k + 1)]
             + [f"sigma{i}" for i in range(1, self._k + 1)]
             + [f"weight{i}" for i in range(1, self._k + 1)]
@@ -78,7 +77,7 @@ class GaussianMixture:
         if save:
             # Save the GMM results object
             with self.results_fpath.open("wb") as f:
-                pickle.dump({i: gmm for i, gmm in zip(index, gmms)}, f)
+                pickle.dump(gmms, f)
 
             # Save the GMM params
             results.to_csv(self.param_fpath)

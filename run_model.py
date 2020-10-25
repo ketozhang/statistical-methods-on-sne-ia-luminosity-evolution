@@ -30,7 +30,7 @@ if __name__ == "__main__":
         age_matrix,
         sample_kwargs=dict(
             draws=25000, tune=5000, discard_tuned_samples=True, chains=1
-        ),
+        )
     )
 
     for varname in tqdm(trace.varnames, desc="Saving results"):
