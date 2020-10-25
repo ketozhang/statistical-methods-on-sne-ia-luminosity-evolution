@@ -29,7 +29,7 @@ if __name__ == "__main__":
         hr_df["hr_err"],
         age_matrix,
         sample_kwargs=dict(
-            draws=25000, tune=5000, discard_tuned_samples=True, chains=1
+            draws=25000, tune=5000, discard_tuned_samples=True, chains=4
         )
     )
 
