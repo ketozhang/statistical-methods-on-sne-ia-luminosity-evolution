@@ -30,7 +30,7 @@ if __name__ == "__main__":
     gmm = GaussianMixture(name=args.dataset)
     gmm.fit(age_matrix, n_components=3)
     gmm_params = gmm.get_params()
-    gmm_params.to_csv(gmm.params_fpath)
+    gmm_params.to_csv(gmm.params_fpath, index=False)
     results = {snid: result for snid, result in zip(snids, gmm.get_results())}
     with gmm.results_fpath.open("wb") as f:
         pickle.dump(results, f)
