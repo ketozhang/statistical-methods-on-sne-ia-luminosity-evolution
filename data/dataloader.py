@@ -1,3 +1,4 @@
+from scipy import stats
 import re
 from pathlib import Path
 
@@ -34,14 +35,12 @@ def load_age_sample_from_mcmc_chains(dataset, mode="read", **kwargs):
         return pd.read_table(DATAPATH / f"{dataset}_samples.tsv")
 
 
-def _create_age_sample_from_mcmc_chains(
-    dataset, dataset_path, sample_size=10000, random_state=RNG
-):
-    dfs = []
-    all_dataset_files = list(dataset_path.glob("*.tsv"))
-    for i, sn_chain_path in tqdm(
-        enumerate(all_dataset_files), total=len(all_dataset_files), desc="Downsampling"
-    ):
+def _create_age_sample_from_mcmc_chains(dataset, dataset_path,
+                                        sample_size=10000,
+                                        random_state=RNG,
+                                        min_pvalue=0.05):
+    def get_downsample_efficient(sn_chain_path):
+        """DEPRECATED"""
         # Get number of rows in file
         # Header takes up 2 rows
         nheaders = 2
@@ -55,12 +54,31 @@ def _create_age_sample_from_mcmc_chains(
         _df = pd.read_table(
             sn_chain_path, skiprows=skiprows, usecols=[7], index_col=False
         )
+        return _df
+
+    dfs = []
+    all_dataset_files = list(dataset_path.glob("*.tsv"))
+    for i, sn_chain_path in tqdm(
+        enumerate(all_dataset_files),
+        total=len(all_dataset_files), desc="Downsampling",
+    ):
+        all_df = pd.read_table(sn_chain_path,
+                               skiprows=[1],
+                               usecols=[7],
+                               index_col=False)
+
+        similar = False
+        while not similar:
+            downsample_df = all_df.sample(n=sample_size, replace=False)
+            ks = stats.ks_2samp(all_df['age'], downsample_df['age'])
+            similar = ks.pvalue >= min_pvalue
+            if not similar:
+                print(f"KS p-value too small, resampling {sn_chain_path.name}")
 
         # Set the index as the SNID parsed from its filename
-        snid = re.findall("SN(\d+)_", sn_chain_path.name)[0]
-        _df["snid"] = [snid] * len(_df)
-        dfs.append(_df)
-    print(f"{len(all_dataset_files)}/{len(all_dataset_files)}", end="\r")
+        snid = re.findall(r"SN(\d+)_", sn_chain_path.name)[0]
+        downsample_df["snid"] = [snid] * len(downsample_df)
+        dfs.append(downsample_df)
 
     df = pd.concat(dfs)[["snid", "age"]]
     df.to_csv(DATAPATH / f"{dataset}_samples.tsv", sep="\t", index=False)

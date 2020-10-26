@@ -43,7 +43,7 @@ if __name__ == "__main__":
         age_matrix,
         gmm_params=gmm_params.to_numpy(),
         sample_kwargs=dict(
-            draws=10000, tune=5000, discard_tuned_samples=True, chains=4
+            draws=25000, tune=5000, discard_tuned_samples=True, chains=4
         )
     )
 

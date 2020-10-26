@@ -2,6 +2,7 @@
 *.code-workspace
 
 data/mcmc_chains/
+data/campbell*.tsv
 __pycache__/
 .vscode/
 .venv/
