@@ -16,7 +16,7 @@ DATASETS = {
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset", choices=["local", "global"])
-    args = parser.parse_args(["local"])
+    args = parser.parse_args()
 
     np.random.seed(1032020)
     age_df = load_age_sample_from_mcmc_chains(
@@ -54,8 +54,8 @@ if __name__ == "__main__":
 
         result = np.array(result)
         if varname in ["slope", "intercept", "scatter"]:
-            print(f"Saving {varname}...")
             np.savez_compressed(
                 f"results/pymc3/{varname}_{lm.name}.npz", result)
+            print(f"Saved results/pymc3/{varname}_{lm.name}.npz")
         else:
             print(f"Skip saving {varname}...")
