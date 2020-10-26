@@ -1,12 +1,12 @@
-import numpy as np
 import argparse
+
+import numpy as np
 from tqdm import tqdm
 
 from data.dataloader import (clean_data, load_age_sample_from_mcmc_chains,
                              load_hr)
-from models.pymc3_models import LinearModel
 from models.gaussian_mixture import GaussianMixture
-import pickle
+from models.pymc3_models import LinearModel
 
 DATASETS = {
     "local": "campbell",
@@ -19,7 +19,7 @@ if __name__ == "__main__":
                         "local", "global"], default="local")
     args = parser.parse_args()
 
-    np.random.seed(1032020)
+    np.random.seed(10252020)
     age_df = load_age_sample_from_mcmc_chains(
         DATASETS[args.dataset], mode="read")
     hr_df = load_hr()
@@ -33,6 +33,7 @@ if __name__ == "__main__":
         gmm.load()
     except FileNotFoundError:
         gmm.fit(age_matrix, n_components=3)
+        gmm.save()
 
     gmm_params = gmm.get_params()
     gmm_params.index = snids
