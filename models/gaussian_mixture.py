@@ -52,11 +52,11 @@ class GaussianMixture:
             self.gmms.append(gmm)
 
     def save(self):
-        assert self.gmm is not None, "No results can be saved before fit is ran."
+        assert self.gmms is not None, "No results can be saved before fit is ran."
 
         # Save GMM object
         with self.results_fpath.open("wb") as f:
-            pickle.dump(self.gmm, f)
+            pickle.dump(self.gmms, f)
         print(f"Saved successful {self.results_fpath}")
 
         # Save GMM params
