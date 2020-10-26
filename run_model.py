@@ -15,7 +15,8 @@ DATASETS = {
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset", choices=["local", "global"])
+    parser.add_argument("--dataset", choices=[
+                        "local", "global"], default="local")
     args = parser.parse_args()
 
     np.random.seed(1032020)
@@ -28,12 +29,13 @@ if __name__ == "__main__":
 
     # GMM fit on Age
     gmm = GaussianMixture(name=args.dataset)
-    gmm.fit(age_matrix, n_components=3)
+    try:
+        gmm.load()
+    except FileNotFoundError:
+        gmm.fit(age_matrix, n_components=3)
+
     gmm_params = gmm.get_params()
-    gmm_params.to_csv(gmm.params_fpath, index=False)
-    results = {snid: result for snid, result in zip(snids, gmm.get_results())}
-    with gmm.results_fpath.open("wb") as f:
-        pickle.dump(results, f)
+    gmm_params.index = snids
 
     # MCMC Linear Fit
     lm = LinearModel(name=args.dataset)

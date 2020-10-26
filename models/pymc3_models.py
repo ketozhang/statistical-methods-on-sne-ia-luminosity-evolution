@@ -19,7 +19,7 @@ class LinearModel:
 
         assert gmm_params.shape[1] % 3 == 0, \
             "GMM params shape 1 must multiple of 3."
-        k = gmm_params.shape[1] / 3
+        k = gmm_params.shape[1] // 3
         mu_x = gmm_params[:, :k]
         sigma_x = gmm_params[:, k:2*k]
         weights_x = gmm_params[:, 2*k:3*k]

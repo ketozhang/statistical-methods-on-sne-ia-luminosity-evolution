@@ -1,12 +1,11 @@
-import logging
 import pickle
+import textwrap
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from sklearn import mixture
 from tqdm import trange
-import textwrap
 
 
 class GaussianMixture:
@@ -51,6 +50,25 @@ class GaussianMixture:
                 n_components=n_components, covariance_type="spherical"
             ).fit(x[i].reshape(len(x[i]), -1))
             self.gmms.append(gmm)
+
+    def save(self):
+        assert self.gmm is not None, "No results can be saved before fit is ran."
+
+        # Save GMM object
+        with self.results_fpath.open("wb") as f:
+            pickle.dump(self.gmm, f)
+        print(f"Saved successful {self.results_fpath}")
+
+        # Save GMM params
+        params = self.get_params()
+        params.to_csv(self.params_fpath, index=False)
+        print(f"Saved successful {self.params_fpath}")
+
+    def load(self, fpath=None):
+        # Load GMM object
+        fpath = fpath or self.results_fpath
+        with fpath.open("rb") as f:
+            self.gmms = pickle.load(f)
 
     def get_results(self):
         return self.gmms
