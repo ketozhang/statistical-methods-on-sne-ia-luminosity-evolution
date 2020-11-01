@@ -13,6 +13,17 @@ RESULTSPATH = Path("./results")
 FIGURESPATH = Path("./paper/figures")
 
 
+def get_data(dataset, **kwargs):
+    """Returns the SNIDs, Age dataframe, and HR dataframe.
+    A row in these dataframes correspond to one supernovae by its SNID.
+    """
+    age_df = load_age_sample_from_mcmc_chains(dataset, **kwargs)
+    hr_df = load_hr()
+    age_df, hr_df = clean_data(age_df, hr_df)
+    snids = age_df.index.unique().tolist()
+    return snids, age_df, hr_df
+
+
 def load_age_sample_from_mcmc_chains(dataset, mode="read", **kwargs):
     """Return a random sample of the mcmc chains dataset for all SNe available.
 
