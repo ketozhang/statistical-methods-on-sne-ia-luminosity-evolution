@@ -30,13 +30,14 @@ import numpy as np
 
 
 def estimate_correlation(age, hr):
+    """
+    age : pd.DataFrame (with columns "mean", "var")
+    hr :
+        A list of hr observations
+    """
     age_var = np.sum(
         age["var"] / len(age) + (np.mean(age["mean"]) - age["mean"]) / (len(age) - 1)
     )
-    _corr = np.cov(age["mean"], hr["hr"])[0, 1] / np.sqrt(
-        (hr["hr"].var(ddof=1) + np.mean(hr["hr_err"] ** 2)) * age_var
-    )
+    _corr = np.cov(age["mean"], hr["hr"])[0, 1] / np.sqrt((hr["hr"].var(ddof=1) + np.mean(hr["hr_err"] ** 2)) * age_var)
 
-    return _corr, _corr / np.sqrt(
-        1 - (np.mean(hr["hr_err"] ** 2) / hr["hr"].var(ddof=1))
-    )
+    return _corr, _corr / np.sqrt(1 - (np.mean(hr["hr_err"] ** 2) / hr["hr"].var(ddof=1)))
