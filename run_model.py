@@ -49,7 +49,7 @@ if __name__ == "__main__":
             result.append(trace.get_values(varname, chains=[i]))
 
         result = np.array(result)
-        if varname in ["slope", "intercept", "scatter"]:
+        if varname in ["slope", "intercept", "scatter_sigma"]:
             np.savez_compressed(
                 f"results/pymc3/{varname}_{lm.name}.npz", result)
             print(f"Saved results/pymc3/{varname}_{lm.name}.npz")

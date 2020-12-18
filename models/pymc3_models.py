@@ -32,7 +32,7 @@ class LinearModel:
             # Priors
             intercept = pm.Uniform("intercept", -1, 1)
             slope = pm.Uniform("slope", -1, 0)
-            scatter_sigma = pm.HalfNormal("scatter_sigma", 2)
+            scatter_sigma = pm.HalfNormal("scatter_sigma", 0.2)
 
             components = []
             for i in range(k):
