@@ -1,5 +1,4 @@
-[![DOI](https://zenodo.org/badge/292364632.svg)](https://zenodo.org/badge/latestdoi/292364632)
-[![arXiv](https://img.shields.io/badge/arXiv-2012.06215-b31b1b.svg)](https://arxiv.org/abs/2012.06215)
+[![arXiv](https://img.shields.io/badge/ads-2021MNRAS.503L..33Z-blue)](https://ui.adsabs.harvard.edu/abs/2021MNRAS.503L..33Z/abstract)
 
 # Improving Bayesian posterior correlation analysis on Type Ia supernova luminosity evolution
 Keto D. Zhang, Yukei S. Murakami, Benjamin E. Stahl, Kishore C. Patra, Alexei V. Filippenko
